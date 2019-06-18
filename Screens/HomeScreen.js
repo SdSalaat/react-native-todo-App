@@ -1,7 +1,7 @@
 import React from 'react';
 import {Icon, View} from "native-base";
 import ListItems from "../Components/ListItems/ListItems";
-import AsyncStorage from '@react-native-community/async-storage';
+import {getData, storeData} from '../utils/storage'
 
 export default class HomeScreen extends React.Component {
     static navigationOptions = ({navigation}) => {
@@ -28,7 +28,7 @@ export default class HomeScreen extends React.Component {
         this.willFocusListener = this.props.navigation.addListener(
             'willFocus',
             () => {
-                this.getData()
+                getData()
                     .then(data => {
                         this.setState({
                             ...this.state,
@@ -37,11 +37,11 @@ export default class HomeScreen extends React.Component {
                     });
             }
         );
-        const todos = this.getData()
+        getData()
             .then(data => {
                 if (data === undefined) {
                     let todo = [];
-                    this.storeData(todo)
+                    storeData(todo)
                         .then(data => console.log(data))
                 } else {
                     this.setState({
@@ -63,30 +63,11 @@ export default class HomeScreen extends React.Component {
             ...this.state,
             todos: todos
         });
-        this.storeData(todos);
+        storeData(todos);
     };
 
     navigateToDesc = (name, title, data?) => {
         this.props.navigation.navigate(name, {title: title, data})
-    };
-
-    getData = async () => {
-        try {
-            const value = await AsyncStorage.getItem('react-native-todo');
-            if (value !== null) {
-                return JSON.parse(value);
-            }
-        } catch (e) {
-            console.log(e)
-        }
-    };
-
-    storeData = async (data) => {
-        try {
-            await AsyncStorage.setItem('react-native-todo', JSON.stringify(data))
-        } catch (e) {
-            console.log(e)
-        }
     };
 
 
@@ -94,7 +75,9 @@ export default class HomeScreen extends React.Component {
         const {navigate} = this.props.navigation;
         return (
             <View style={{padding: 10}}>
-                <ListItems btnClick={(status, index) => {this.handleClick(status, index)}} todos={this.state.todos.reverse()} click={(name, title, data?) => {
+                <ListItems btnClick={(status, index) => {
+                    this.handleClick(status, index)
+                }} todos={this.state.todos.reverse()} click={(name, title, data?) => {
                     this.navigateToDesc(name, title, data)
                 }}/>
             </View>

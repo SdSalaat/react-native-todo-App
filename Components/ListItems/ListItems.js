@@ -24,7 +24,7 @@ const ListItems = props => {
                     </Button>
                 </Left>
                 <Body>
-                    <Text style={todo.status ? {textDecorationLine: 'line-through', color: '#424242'} : {}}>{todo.title}</Text>
+                    <Text style={todo.status ? {textDecorationLine: 'line-through', color: '#424242'} : {}}>{todo.title.length > 15 ? todo.title.slice(0, 15)+'...': todo.title}</Text>
                     <Text note>Created At: {todo.createdAt}</Text>
                 </Body>
                 <Right  >

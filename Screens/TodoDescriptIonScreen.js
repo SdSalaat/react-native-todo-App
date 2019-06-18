@@ -1,39 +1,19 @@
 import React from 'react';
 import {StyleSheet, ScrollView} from 'react-native';
-import {View, Text, Button} from "native-base";
-import AsyncStorage from "@react-native-community/async-storage";
-
+import {View, Text, Button, Label} from "native-base";
+import {getData, storeData} from '../utils/storage'
 export default class TodoDescriptionScreen extends React.Component {
 
     static navigationOptions = ({navigation}) => {
         return {
-            title: navigation.getParam('title'),
+            title: navigation.getParam('title').length > 15 ? 'Description' : navigation.getParam('title'),
         }
     };
 
     data = this.props.navigation.getParam('data');
-    getData = async () => {
-        try {
-            const value = await AsyncStorage.getItem('react-native-todo');
-            if (value !== null) {
-                return JSON.parse(value);
-            }
-        } catch (e) {
-            console.log(e)
-        }
-    };
-
-
-    storeData = async (data) => {
-        try {
-            await AsyncStorage.setItem('react-native-todo', JSON.stringify(data))
-        } catch (e) {
-            console.log(e)
-        }
-    };
 
     btnPressed = (name) => {
-        this.getData()
+        getData()
             .then(todos => {
                 let index = todos.findIndex((todo) => {
                     return todo.id === this.data.id
@@ -44,7 +24,7 @@ export default class TodoDescriptionScreen extends React.Component {
                 } else {
                     todos[index].status = true;
                 }
-                this.storeData(todos)
+                storeData(todos)
                     .then(() => {
                        this.props.navigation.pop();
                     });
@@ -56,6 +36,12 @@ export default class TodoDescriptionScreen extends React.Component {
         const data = this.props.navigation.getParam('data');
         return (
             <ScrollView style={{padding: 10}}>
+                {data.title.length > 15 ? <Label style={styles.label}> Title</Label>: null}
+                {data.title.length > 15 ? <Text style={styles.description}>{data.title}</Text>: null}
+
+                <View><Text>&nbsp;</Text></View>
+
+                <Label style={styles.label}>Description</Label>
                 <Text style={styles.description}>{data.description}</Text>
 
                 <View style={styles.displayer}>
@@ -80,6 +66,10 @@ const styles = StyleSheet.create({
         color: '#424242',
         borderColor: '#7e7e7e',
         padding: 5
+    },
+    label: {
+        textAlign: 'center',
+        fontWeight: 'bold'
     },
     displayer: {
         justifyContent: 'center',

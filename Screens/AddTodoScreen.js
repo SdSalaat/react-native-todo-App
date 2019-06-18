@@ -1,6 +1,6 @@
 import React from 'react';
 import Todo from "../Components/Todo/Todo";
-import AsyncStorage from "@react-native-community/async-storage";
+import {getData, storeData} from '../utils/storage'
 
 export default class AddTodoScreen extends React.Component {
     static navigationOptions = ({navigation}) => {
@@ -18,7 +18,7 @@ export default class AddTodoScreen extends React.Component {
         status: false
     };
     saveToMemory = () => {
-        this.getData()
+        getData()
             .then(data => {
                 let today = new Date();
                 let dd = String(today.getDate()).padStart(2, '0');
@@ -30,31 +30,14 @@ export default class AddTodoScreen extends React.Component {
                     id: data.length
                 });
                 data.push(this.state);
-                this.storeData(data)
+                storeData(data)
                     .then(store => {
                         this.props.navigation.navigate('Home')
                     })
             });
     };
 
-    getData = async () => {
-        try {
-            const value = await AsyncStorage.getItem('react-native-todo');
-            if(value !== null) {
-                return JSON.parse(value);
-            }
-        } catch(e) {
-            console.log(e)
-        }
-    };
 
-    storeData = async (data) => {
-        try {
-            await AsyncStorage.setItem('react-native-todo', JSON.stringify(data))
-        } catch (e) {
-            console.log(e)
-        }
-    };
 
     changeHandler = (e, name) => {
         if (name === 'priority') {
