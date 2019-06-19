@@ -4,6 +4,7 @@ import {StyleSheet, ScrollView} from "react-native";
 
 
 const ListItems = props => {
+    
     const styles = StyleSheet.create({
         noFound: {
             fontWeight: 'bold',

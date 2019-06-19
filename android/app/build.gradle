@@ -138,6 +138,9 @@ android {
 }
 
 dependencies {
+    compile "com.google.android.gms:play-services-gcm:16.1.0"
+    compile "com.google.firebase:firebase-messaging:17.6.0"
+    implementation project(':react-native-push-notification')
     implementation project(':@react-native-community_async-storage')
     implementation project(':react-native-gesture-handler')
     implementation fileTree(dir: "libs", include: ["*.jar"])

@@ -2,7 +2,8 @@ import React from 'react';
 import {Icon, View} from "native-base";
 import ListItems from "../Components/ListItems/ListItems";
 import {getData, storeData} from '../utils/storage'
-
+import {AppState} from 'react-native'
+import PushNotification from 'react-native-push-notification';
 export default class HomeScreen extends React.Component {
     static navigationOptions = ({navigation}) => {
         return {
@@ -19,11 +20,28 @@ export default class HomeScreen extends React.Component {
         todos: []
     };
 
+    _handleAppStateChange = (appState) => {
+        console.log('App is in Background now');
+        // if(appState === 'background') {
+        //     PushNotification.localNotificationSchedule({
+        //         message: "Uno Duos Treas Quatro sinco",date: new Date(Date.now() + (5 * 1000))
+        //     });
+        // }
+
+    };
+
     componentWillUnmount(): void {
-        this.willFocusListener.remove()
+        this.willFocusListener.remove();
+        AppState.addEventListener('change', this._handleAppStateChange.bind(this));
     }
 
     componentDidMount() {
+        PushNotification.localNotificationSchedule({
+            message: "New One",date: new Date(Date.now() + (5 * 1000))
+        });
+        AppState.addEventListener('change', this._handleAppStateChange.bind(this));
+
+
         // AsyncStorage.clear();
         this.willFocusListener = this.props.navigation.addListener(
             'willFocus',
