@@ -1,6 +1,8 @@
 import {Button, Form, Icon, Input, Item, Label, Picker, Text, Textarea} from "native-base";
 import React from "react";
 
+import PickDateTime from "./DateTimePicker";
+
 const Todo = props => {
     return (
         <Form style={{padding: 10}}>
@@ -25,6 +27,16 @@ const Todo = props => {
                 <Label>Title </Label>
                 <Input onChange={(e) => {props.change(e, 'title')}} placeholder='Enter Title Here' />
             </Item>
+
+            <PickDateTime
+                timePicker={props.timePicker}
+                showPicker={props.showPicker}
+                setDate={props.setDate}
+                setTime={props.setTime}
+                datePicker={props.datePicker}
+                reminderDate={props.reminderDate}
+                onCancel={props.onCancel}
+            />
             <Textarea onChange={(e) => {props.change(e, 'description')}} rowSpan={5} bordered placeholder="Description"/>
             <Button onPress={() => {
                 if(props.title.trim() !== ""){
@@ -35,7 +47,6 @@ const Todo = props => {
             }} style={{marginTop: 10}} block rounded>
                 <Text>Submit</Text>
             </Button>
-
         </Form>
     );
 };

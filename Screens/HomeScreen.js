@@ -32,14 +32,14 @@ export default class HomeScreen extends React.Component {
 
     componentWillUnmount(): void {
         this.willFocusListener.remove();
-        AppState.addEventListener('change', this._handleAppStateChange.bind(this));
+        // AppState.addEventListener('change', this._handleAppStateChange.bind(this));
     }
 
     componentDidMount() {
         PushNotification.localNotificationSchedule({
-            message: "New One",date: new Date(Date.now() + (5 * 1000))
+            message: "New One AGAIN",date: new Date(Date.now() + (5 * 1000))
         });
-        AppState.addEventListener('change', this._handleAppStateChange.bind(this));
+        // AppState.addEventListener('change', this._handleAppStateChange.bind(this));
 
 
         // AsyncStorage.clear();

@@ -12,11 +12,53 @@ export default class AddTodoScreen extends React.Component {
     state = {
         id: '',
         priority: 'low',
+        showDatePicker: false,
+        showTimePicker: false,
         title: '',
+        reminderDate: '',
         description: '',
         createdAt: '',
         status: false
     };
+
+    showPicker = () => {
+        this.setState({
+            showDatePicker: true
+        })
+    };
+
+    setDate = (e) => {
+        let reminderDate = new Date(e).getUTCFullYear() + "-" + (new Date(e).getMonth() + 1) + "-" + new Date(e).getDate()
+        this.setState({
+            ...this.state,
+            reminderDate: reminderDate,
+            showTimePicker: true,
+            showDatePicker: false
+        });
+    };
+
+    setTime = (e) => {
+        let hours = new Date(e).getHours();
+        let mins = new Date(e).getMinutes();
+        let completeDate = new Date(this.state.reminderDate);
+        completeDate.setHours(hours);
+        completeDate.setMinutes(mins);
+        this.setState({
+            ...this.state,
+            reminderDate: completeDate,
+            showTimePicker: false,
+        });
+    };
+
+    cancelReminderWindow = () => {
+        this.setState({
+            ...this.state,
+            showTimePicker: false,
+            showDatePicker: false,
+            reminderDate: ''
+        });
+    };
+
     saveToMemory = () => {
         getData()
             .then(data => {
@@ -38,7 +80,6 @@ export default class AddTodoScreen extends React.Component {
     };
 
 
-
     changeHandler = (e, name) => {
         if (name === 'priority') {
             this.setState({
@@ -56,9 +97,21 @@ export default class AddTodoScreen extends React.Component {
 
     render() {
         return (
-            <Todo title={this.state.title} priority={this.state.priority} save={() => {
-                this.saveToMemory()
-            }} change={(e, name) => this.changeHandler(e, name)}/>
+            <Todo
+                title={this.state.title}
+                priority={this.state.priority}
+                save={() => {
+                    this.saveToMemory()
+                }}
+                showPicker={this.showPicker.bind(this)}
+                change={(e, name) => this.changeHandler(e, name)}
+                setDate={(date) => this.setDate(date)}
+                setTime={(time) => this.setTime(time)}
+                timePicker={this.state.showTimePicker}
+                reminderDate={this.state.reminderDate}
+                onCancel={this.cancelReminderWindow.bind(this)}
+                datePicker={this.state.showDatePicker}
+            />
         );
     }
 }
